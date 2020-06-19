@@ -16,8 +16,8 @@ import java.util.Map;
 public class HttpRequest {
     private List<Header> headers = new ArrayList<>();
     private String url;
-    private int connectTimeout = 3000;
-    private int readTimeout = 3000;
+    private int connectTimeout = 10000;
+    private int readTimeout = 10000;
     private boolean verify = false;
     private HttpMethod requestMethod = HttpMethod.GET;
     private String charset = "UTF-8";
