@@ -131,18 +131,18 @@ public class HttpClient {
         return this;
     }
 
-    public HttpClient setCookie(String cookie) {
+    public HttpClient cookie(String cookie) {
         request.setHeader("Cookie", cookie);
         return this;
     }
 
-    public HttpClient setCookie(String key, String value) {
+    public HttpClient cookie(String key, String value) {
         Header cookie = request.getHeader("Cookie");
         if (cookie == null) {
-            setCookie(key + "=" + value + ";");
+            cookie(key + "=" + value + ";");
             return this;
         }
-        setCookie(cookie.getValue() + key + "=" + value + ";");
+        cookie(cookie.getValue() + key + "=" + value + ";");
         return this;
     }
 
@@ -203,7 +203,7 @@ public class HttpClient {
                 ((HttpsURLConnection) connection).setHostnameVerifier(hv);
             }
             return connection;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -385,7 +385,7 @@ public class HttpClient {
                 });
                 response.setHeaders(headers.toArray(type));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             destructor(connection);
