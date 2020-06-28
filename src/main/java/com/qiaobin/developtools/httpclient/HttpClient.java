@@ -260,32 +260,34 @@ public class HttpClient {
 
     private void write(OutputStream stream, String bound) throws IOException {
         final Collection<Body> body = this.body;
+        //编码
+        Charset charset = Charset.forName(request.getCharset());
         if (Objects.nonNull(bound)) {
             for (Body data : body) {
-                stream.write("--".getBytes(Charset.forName(request.getCharset())));
-                stream.write(bound.getBytes(Charset.forName(request.getCharset())));
-                stream.write("\r\n".getBytes(Charset.forName(request.getCharset())));
-                stream.write("Content-Disposition: form-data; name=\"".getBytes(request.getCharset()));
-                stream.write(encodeName(data.getKey()).getBytes(request.getCharset())); // encodes " to %22
-                stream.write("\"".getBytes(request.getCharset()));
+                stream.write("--".getBytes());
+                stream.write(bound.getBytes(charset));
+                stream.write("\r\n".getBytes(charset));
+                stream.write("Content-Disposition: form-data; name=\"".getBytes(charset));
+                stream.write(encodeName(data.getKey()).getBytes(charset)); // encodes " to %22
+                stream.write("\"".getBytes(charset));
                 if (data.hasStream()) {
-                    stream.write("; filename=\"".getBytes(request.getCharset()));
-                    stream.write(encodeName(data.getValue()).getBytes(request.getCharset()));
-                    stream.write("\"\r\nContent-Type: ".getBytes(request.getCharset()));
-                    stream.write(data.getContentType() != null ? data.getContentType().getBytes(request.getCharset()) : DEFAULT_UPLOAD_TYPE.getBytes(request.getCharset()));
-                    stream.write("\r\n\r\n".getBytes(request.getCharset()));
+                    stream.write("; filename=\"".getBytes(charset));
+                    stream.write(encodeName(data.getValue()).getBytes(charset));
+                    stream.write("\"\r\nContent-Type: ".getBytes(charset));
+                    stream.write(data.getContentType() != null ? data.getContentType().getBytes(charset) : DEFAULT_UPLOAD_TYPE.getBytes(charset));
+                    stream.write("\r\n\r\n".getBytes(charset));
                     send(data.stream, stream);
                 } else {
-                    stream.write("\r\n\r\n".getBytes(request.getCharset()));
-                    stream.write(data.getValue().getBytes(request.getCharset()));
+                    stream.write("\r\n\r\n".getBytes(charset));
+                    stream.write(data.getValue().getBytes(charset));
                 }
-                stream.write("\r\n".getBytes(request.getCharset()));
+                stream.write("\r\n".getBytes(charset));
             }
-            stream.write("--".getBytes(request.getCharset()));
-            stream.write(bound.getBytes(request.getCharset()));
-            stream.write("--".getBytes(request.getCharset()));
+            stream.write("--".getBytes(charset));
+            stream.write(bound.getBytes(charset));
+            stream.write("--".getBytes(charset));
         } else if (request.getBody() != null) {
-            stream.write(request.getBody().getBytes(request.getCharset()));
+            stream.write(request.getBody().getBytes(charset));
         } else {
             boolean first = true;
             Iterator<Body> iterator = body.iterator();
@@ -295,9 +297,9 @@ public class HttpClient {
                     stream.write('&');
                 else
                     first = false;
-                stream.write(URLEncoder.encode(next.getKey(), request.getCharset()).getBytes(request.getCharset()));
+                stream.write(URLEncoder.encode(next.getKey(), request.getCharset()).getBytes(charset));
                 stream.write('=');
-                stream.write(URLEncoder.encode(next.getValue(), request.getCharset()).getBytes(request.getCharset()));
+                stream.write(URLEncoder.encode(next.getValue(), request.getCharset()).getBytes(charset));
             }
         }
     }
